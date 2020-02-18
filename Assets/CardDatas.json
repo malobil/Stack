@@ -1,0 +1,30 @@
+{
+  "Card": [
+    {
+      "Name": "Barbare",
+      "Range": 1,
+      "Attack": 5,
+      "AttackSpeed": 1,
+      "Life": 100,
+      "Fusions": [
+        {
+          "Result": "Berserker",
+          "Materia": "Barbare"
+        }
+      ]
+    },
+    {
+      "Name": "Berserker",
+      "Range": 1,
+      "Attack": 15,
+      "AttackSpeed": 1.2,
+      "Life": 120,
+      "Fusions": [
+        {
+          "Result": "Berserker",
+          "Materia": "Berserker"
+        }
+      ]
+    }
+  ]
+}
