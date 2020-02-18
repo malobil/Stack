@@ -790,12 +790,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2807836641815773570, guid: a5508b5ccebdd2448b88c84da38ec29e,
-        type: 3}
+      objectReference: {fileID: 2100000, guid: 6667daafbb79206478eb70dc739944b1, type: 2}
     - target: {fileID: -927199367670048503, guid: 0bdcf78acb4f3644d96d7665da6d55e7,
         type: 3}
       propertyPath: m_Name
       value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 0bdcf78acb4f3644d96d7665da6d55e7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0bdcf78acb4f3644d96d7665da6d55e7, type: 3}
