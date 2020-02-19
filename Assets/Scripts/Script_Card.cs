@@ -7,8 +7,8 @@ using UnityEngine.EventSystems;
 
 public class Script_Card : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
-    public Card associateCard;
-    public TextMeshProUGUI attackText, defenseText;
+    public Scriptable_Card associateCard;
+    public TextMeshProUGUI attackText, defenseText, nameText;
 
     private RawImage imageComp;
     private int childPosition;
@@ -17,13 +17,13 @@ public class Script_Card : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginD
     private void Start()
     {
         imageComp = GetComponent<RawImage>();
-        associateCard = Script_DataManager.Instance.GetCard("Barbare");
+        
         parentTransform = transform.parent;
         childPosition = transform.GetSiblingIndex();
         SetupTexts();
     }
 
-    public void SetupDatas(Card newAssociateCard)
+    public void SetupDatas(Scriptable_Card newAssociateCard)
     {
         associateCard = newAssociateCard;
         SetupTexts();
@@ -31,26 +31,28 @@ public class Script_Card : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginD
 
     public void SetupTexts()
     {
-        attackText.text = associateCard.Attack.ToString("");
-        defenseText.text = associateCard.Life.ToString("");
+        attackText.text = associateCard.attack.ToString("");
+        defenseText.text = associateCard.life.ToString("");
+        nameText.text = associateCard.name;
     }
 
-    public bool Fuse(GameObject targetFuse)
+    public void Fuse(GameObject targetFuse)
     {
-        Card targetCard = targetFuse.GetComponent<Script_Card>().associateCard;
+        Scriptable_Card fuseCard = targetFuse.GetComponent<Script_Card>().associateCard;
 
-        foreach (Fusions fusions in associateCard.Fusions)
+        for (int i = 0; i < fuseCard.fusionList.Count; i++)
         {
-            if(fusions.Materia == targetCard.Name)
+            if (fuseCard.fusionList[i].materia == associateCard)
             {
-                targetFuse.GetComponent<Script_Card>().SetupDatas(Script_DataManager.Instance.GetCard(fusions.Result));
+                targetFuse.GetComponent<Script_Card>().SetupDatas(fuseCard.fusionList[i].result);
                 Destroy(gameObject);
-                return true;
+                return;
             }
         }
 
-        return false;
+        Debug.Log("Fuse");
     }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         transform.SetParent(parentTransform.parent.transform);
@@ -68,9 +70,9 @@ public class Script_Card : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginD
         {
             Debug.Log(eventData.pointerCurrentRaycast.gameObject);
 
-            if (eventData.pointerCurrentRaycast.gameObject.GetComponent<Script_Card>() && Fuse(eventData.pointerCurrentRaycast.gameObject))
+            if (eventData.pointerCurrentRaycast.gameObject.GetComponent<Script_Card>())
             {
-               
+                Fuse(eventData.pointerCurrentRaycast.gameObject);
             }
             else
             {
