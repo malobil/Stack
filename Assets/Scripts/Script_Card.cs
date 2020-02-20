@@ -10,22 +10,16 @@ public class Script_Card : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginD
     public Scriptable_Card associateCard;
     public TextMeshProUGUI attackText, defenseText, nameText;
 
-    private RawImage imageComp;
+    private Image imageComp;
     private int childPosition;
     private Transform parentTransform;
-
-    private void Start()
-    {
-        imageComp = GetComponent<RawImage>();
-        
-        parentTransform = transform.parent;
-        childPosition = transform.GetSiblingIndex();
-        SetupTexts();
-    }
 
     public void SetupDatas(Scriptable_Card newAssociateCard)
     {
         associateCard = newAssociateCard;
+        imageComp = GetComponent<Image>();
+        parentTransform = transform.parent;
+        CheckPositon();
         SetupTexts();
     }
 
@@ -33,7 +27,13 @@ public class Script_Card : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginD
     {
         attackText.text = associateCard.attack.ToString("");
         defenseText.text = associateCard.life.ToString("");
-        nameText.text = associateCard.name;
+        nameText.text = associateCard.cardName;
+        imageComp.sprite = associateCard.unitSprite;
+    }
+
+    public void CheckPositon()
+    {
+        childPosition = transform.GetSiblingIndex();
     }
 
     public void Fuse(GameObject targetFuse)
@@ -45,12 +45,15 @@ public class Script_Card : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginD
             if (fuseCard.fusionList[i].materia == associateCard)
             {
                 targetFuse.GetComponent<Script_Card>().SetupDatas(fuseCard.fusionList[i].result);
+                transform.SetParent(parentTransform.parent.transform);
+                Script_GameManager.Instance.RemoveCardInHand(this);
+                Script_GameManager.Instance.CheckUpCardPosition();
+                Script_GameManager.Instance.DrawACard();
                 Destroy(gameObject);
+               
                 return;
             }
         }
-
-        Debug.Log("Fuse");
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -68,14 +71,25 @@ public class Script_Card : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginD
     {
         if(eventData.pointerCurrentRaycast.gameObject != null)
         {
-            Debug.Log(eventData.pointerCurrentRaycast.gameObject);
-
             if (eventData.pointerCurrentRaycast.gameObject.GetComponent<Script_Card>())
             {
                 Fuse(eventData.pointerCurrentRaycast.gameObject);
             }
+            else if(eventData.pointerCurrentRaycast.gameObject.CompareTag("DropZone"))
+            {
+                Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                
+                if(Physics.Raycast(cameraRay,out hit))
+                {
+                    Engage(hit.point);
+                }
+
+              
+            }
             else
             {
+               
                 ResetParent();
             }
         }
@@ -83,9 +97,16 @@ public class Script_Card : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginD
         {
             ResetParent();
         }
-       
-
         imageComp.raycastTarget = true;
+    }
+
+    void Engage(Vector3 engagePosition)
+    {
+        Instantiate(associateCard.unitPrefab, engagePosition, associateCard.unitPrefab.transform.rotation);
+        Script_GameManager.Instance.RemoveCardInHand(this);
+        Script_GameManager.Instance.DrawACard();
+        Destroy(gameObject);
+        Debug.Log("Engage");
     }
 
     void ResetParent()

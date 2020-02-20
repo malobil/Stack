@@ -5,7 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Card",menuName = "Card")]
 public class Scriptable_Card : ScriptableObject
 {
-    public string name;
+    public string cardName;
+    public GameObject unitPrefab;
+    public Sprite unitSprite;
     public float range;
     public float attack;
     public float attackSpeed;
