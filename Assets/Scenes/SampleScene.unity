@@ -408,11 +408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 497deb67a9b6e234889d8fb19dd2dba5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardInHand:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  cardInHand: []
   cardDatas:
   - {fileID: 11400000, guid: ea9a2813fe029674682b2accc396f82f, type: 2}
   - {fileID: 11400000, guid: 9e551de9397727f4286a51334731393c, type: 2}

@@ -47,8 +47,6 @@ public class Script_GameManager : MonoBehaviour
         Script_UIManager.Instance.SetNewCard(newCard.transform);
         newCard.GetComponent<Script_Card>().SetupDatas(drawedCard);
         AddCardInHand(newCard.GetComponent<Script_Card>());
-      
-
     }
 
     public void AddCardInHand(Script_Card card)

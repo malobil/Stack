@@ -36,7 +36,7 @@ public class Script_Card : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginD
         childPosition = transform.GetSiblingIndex();
     }
 
-    public void Fuse(GameObject targetFuse)
+    public bool Fuse(GameObject targetFuse)
     {
         Scriptable_Card fuseCard = targetFuse.GetComponent<Script_Card>().associateCard;
 
@@ -51,9 +51,11 @@ public class Script_Card : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginD
                 Script_GameManager.Instance.DrawACard();
                 Destroy(gameObject);
                
-                return;
+                return true;
             }
         }
+
+        return false;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -71,9 +73,9 @@ public class Script_Card : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginD
     {
         if(eventData.pointerCurrentRaycast.gameObject != null)
         {
-            if (eventData.pointerCurrentRaycast.gameObject.GetComponent<Script_Card>())
+            if (eventData.pointerCurrentRaycast.gameObject.GetComponent<Script_Card>() && Fuse(eventData.pointerCurrentRaycast.gameObject))
             {
-                Fuse(eventData.pointerCurrentRaycast.gameObject);
+
             }
             else if(eventData.pointerCurrentRaycast.gameObject.CompareTag("DropZone"))
             {
@@ -84,8 +86,6 @@ public class Script_Card : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginD
                 {
                     Engage(hit.point);
                 }
-
-              
             }
             else
             {
